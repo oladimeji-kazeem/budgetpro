@@ -11,6 +11,7 @@ import AUM from "./pages/AUM";
 import Forecast from "./pages/Forecast";
 import Analysis from "./pages/Analysis";
 import UsersPage from "./pages/UsersPage";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/aum" element={<MainLayout><AUM /></MainLayout>} />
           <Route path="/forecast" element={<MainLayout><Forecast /></MainLayout>} />
           <Route path="/analysis" element={<MainLayout><Analysis /></MainLayout>} />
+          <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
