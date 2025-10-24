@@ -73,6 +73,8 @@ export type Database = {
           admin_fee: number | null
           asset_fee: number | null
           aum_id: string
+          aum_type: string | null
+          contribution_growth: number | null
           created_at: string
           date_id: string
           existing_pin_contribution: number | null
@@ -83,22 +85,29 @@ export type Database = {
           never_funded_pin: number | null
           new_pin: number | null
           new_pin_contribution: number | null
+          payout: number | null
+          payout_growth: number | null
           pencom_fee: number | null
           pfa_fee: number | null
           pfc_fee: number | null
+          rate_of_return: number | null
           retiree_contributors: number | null
           scenario_id: string
           total_aum: number | null
           total_benefits_paid: number | null
+          total_contribution: number | null
           total_pin: number | null
           total_rsa_balance: number | null
           updated_at: string
+          vat_fee: number | null
         }
         Insert: {
           active_pin?: number | null
           admin_fee?: number | null
           asset_fee?: number | null
           aum_id?: string
+          aum_type?: string | null
+          contribution_growth?: number | null
           created_at?: string
           date_id: string
           existing_pin_contribution?: number | null
@@ -109,22 +118,29 @@ export type Database = {
           never_funded_pin?: number | null
           new_pin?: number | null
           new_pin_contribution?: number | null
+          payout?: number | null
+          payout_growth?: number | null
           pencom_fee?: number | null
           pfa_fee?: number | null
           pfc_fee?: number | null
+          rate_of_return?: number | null
           retiree_contributors?: number | null
           scenario_id: string
           total_aum?: number | null
           total_benefits_paid?: number | null
+          total_contribution?: number | null
           total_pin?: number | null
           total_rsa_balance?: number | null
           updated_at?: string
+          vat_fee?: number | null
         }
         Update: {
           active_pin?: number | null
           admin_fee?: number | null
           asset_fee?: number | null
           aum_id?: string
+          aum_type?: string | null
+          contribution_growth?: number | null
           created_at?: string
           date_id?: string
           existing_pin_contribution?: number | null
@@ -135,16 +151,21 @@ export type Database = {
           never_funded_pin?: number | null
           new_pin?: number | null
           new_pin_contribution?: number | null
+          payout?: number | null
+          payout_growth?: number | null
           pencom_fee?: number | null
           pfa_fee?: number | null
           pfc_fee?: number | null
+          rate_of_return?: number | null
           retiree_contributors?: number | null
           scenario_id?: string
           total_aum?: number | null
           total_benefits_paid?: number | null
+          total_contribution?: number | null
           total_pin?: number | null
           total_rsa_balance?: number | null
           updated_at?: string
+          vat_fee?: number | null
         }
         Relationships: [
           {
