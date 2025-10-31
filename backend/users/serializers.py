@@ -15,6 +15,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['role'] = user.role
         token['first_name'] = user.first_name
+        # Add is_approved and is_active to enforce access checks on the client
+        token['is_approved'] = user.is_approved
+        token['is_active'] = user.is_active 
         return token
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -43,7 +46,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
         try:
             with transaction.atomic():
-                # Create the user but mark as inactive until approved
+                # Create the user but mark as inactive and unapproved
                 user = CustomUser.objects.create_user(
                     email=validated_data['email'],
                     password=validated_data['password'],
@@ -51,12 +54,45 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                     last_name=validated_data['last_name'],
                     department=validated_data['department'],
                     role=validated_data['role'],
-                    is_active=False,  # User cannot log in until approved
+                    is_active=False,
                     is_approved=False
                 )
                 # Create an access request for the admin to review
-                UserAccessRequest.objects.create(user=user, requested_role=user.role)
+                UserAccessRequest.objects.create(
+                    user=user, 
+                    requested_role=user.role, 
+                    status=UserAccessRequest.STATUS_CHOICES[0][0] # 'PENDING'
+                )
+                
+                # TODO: Send email notification to App Admins (AA)
+                
                 return user
         except Exception as e:
             # If anything fails, the transaction will be rolled back.
             raise serializers.ValidationError({"detail": f"An error occurred during registration: {e}"})
+
+class AccessRequestSerializer(serializers.ModelSerializer):
+    """
+    Serializer for listing pending access requests.
+    Includes read-only fields from the linked CustomUser.
+    """
+    user_email = serializers.ReadOnlyField(source='user.email')
+    user_fullname = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserAccessRequest
+        fields = (
+            'id', 'user_email', 'user_fullname', 'requested_role', 
+            'requested_at', 'status', 'rejection_reason'
+        )
+        read_only_fields = fields
+
+    def get_user_fullname(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
+
+class AccessRequestActionSerializer(serializers.Serializer):
+    """
+    Serializer to validate the data sent by the Admin for approving/rejecting a request.
+    """
+    action = serializers.ChoiceField(choices=['APPROVE', 'REJECT'], required=True)
+    rejection_reason = serializers.CharField(max_length=500, required=False, allow_blank=True)

@@ -24,4 +24,10 @@ const getAccessRequests = (authToken) => {
     });
 };
 
-export default { register, login, getAccessRequests };
+const authService = {
+    register,
+    login,
+    getAccessRequests,
+};
+
+export default authService;

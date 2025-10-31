@@ -1,68 +1,176 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Corporate Brand Colors - Leadway Pensure PFA */
+    --background: 0 0% 98%;
+    --foreground: 207 30% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 207 30% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 207 30% 25%;
+
+    /* Primary: Navy Blue - Professional & Trustworthy */
+    --primary: 207 30% 42%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 207 30% 35%;
+
+    /* Secondary: Teal - Active & Engaging */
+    --secondary: 177 48% 42%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 177 48% 35%;
+
+    /* Accent: Lime Green - Growth & Success */
+    --accent: 74 61% 52%;
+    --accent-foreground: 207 30% 25%;
+    --accent-hover: 74 61% 45%;
+
+    --muted: 210 20% 95%;
+    --muted-foreground: 207 15% 50%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 20% 88%;
+    --input: 214 20% 88%;
+    --ring: 177 48% 42%;
+
+    --radius: 0.75rem;
+
+    /* Enterprise Table Colors */
+    --table-header: 207 30% 42%;
+    --table-row-even: 0 0% 98%;
+    --table-row-odd: 0 0% 100%;
+    --table-row-hover: 177 48% 96%;
+
+    /* Status Colors */
+    --status-success: 142 71% 45%;
+    --status-warning: 38 92% 50%;
+    --status-error: 0 72% 51%;
+    --status-info: 199 89% 48%;
+
+    /* Sidebar */
+    --sidebar-background: 207 30% 42%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 177 48% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 207 30% 35%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 207 30% 30%;
+    --sidebar-ring: 177 48% 42%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(207 30% 42%), hsl(177 48% 42%));
+    --gradient-accent: linear-gradient(135deg, hsl(177 48% 42%), hsl(74 61% 52%));
+    --gradient-hero: linear-gradient(135deg, hsl(207 30% 42% / 0.95), hsl(177 48% 42% / 0.95));
+
+    /* Shadows */
+    --shadow-card: 0 2px 8px hsl(207 30% 25% / 0.08);
+    --shadow-elevated: 0 4px 16px hsl(207 30% 25% / 0.12);
+    --shadow-button: 0 2px 4px hsl(207 30% 25% / 0.1);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-quick: all 0.15s ease;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 207 30% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 207 30% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 207 30% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 177 48% 52%;
+    --primary-foreground: 207 30% 8%;
+    --primary-hover: 177 48% 45%;
+
+    --secondary: 207 30% 20%;
+    --secondary-foreground: 0 0% 95%;
+    --secondary-hover: 207 30% 15%;
+
+    --accent: 74 61% 52%;
+    --accent-foreground: 207 30% 8%;
+    --accent-hover: 74 61% 45%;
+
+    --muted: 207 30% 15%;
+    --muted-foreground: 207 15% 70%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 207 30% 20%;
+    --input: 207 30% 20%;
+    --ring: 177 48% 52%;
+
+    --table-header: 207 30% 15%;
+    --table-row-even: 207 30% 10%;
+    --table-row-odd: 207 30% 12%;
+    --table-row-hover: 177 48% 15%;
+
+    --sidebar-background: 207 30% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 177 48% 52%;
+    --sidebar-primary-foreground: 207 30% 8%;
+    --sidebar-accent: 207 30% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 207 30% 15%;
+    --sidebar-ring: 177 48% 52%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-quick {
+    transition: var(--transition-quick);
   }
 }
