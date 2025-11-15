@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Funds{% endblock %}
+
+{% block content_header %}
+    <h1>Manage Funds</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item active">Funds</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Fund List</h3>
+        <div class="card-tools">
+            <a href="{% url 'budgeting:fund_create' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add New Fund
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Fund Name</th>
+                    <th>Fund Type</th>
+                    <th>Category</th>
+                    <th style="width: 150px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fund in funds %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ fund.fund_name }}</td>
+                    <td>{{ fund.get_fund_type_display }}</td>
+                    <td>{{ fund.fund_category.category_name }}</td>
+                    <td>
+                        <a href="{% url 'budgeting:fund_update' fund.pk %}" class="btn btn-xs btn-info"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'budgeting:fund_delete' fund.pk %}" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No funds found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

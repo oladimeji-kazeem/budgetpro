@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content_header %}
+<h1>Dashboard</h1>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+    <li class="breadcrumb-item active">Dashboard</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 col-6">
+        <!-- small box -->
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ current_fiscal_year }}</h3>
+                <p>Current Fiscal Year</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-6">
+        <!-- small box -->
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ total_funds }}</h3>
+                <p>Managed Funds</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-6">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <p>Last GL Import:</p>
+                <p>{{ last_gl_import_date|date:"Y-m-d"|default:"Never" }}</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-upload"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Welcome to the MBP Application</h3>
+    </div>
+    <div class="card-body">
+        <p>Use the sidebar navigation to access different modules of the application.</p>
+        <ul>
+            <li><b>Upload GL Data:</b> Import your financial actuals.</li>
+            <li><b>View Reports:</b> Analyze financial performance.</li>
+            <li><b>Admin:</b> Manage master data and users.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

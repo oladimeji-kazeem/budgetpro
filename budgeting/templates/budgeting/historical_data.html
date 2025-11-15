@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load budgeting_custom_filters %}
+
+{% block title %}Module 1: Historical Data{% endblock %}
+
+{% block content_header %}
+    Historical Data & Editable Forecasts (Module 1)
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom styles for the financial report look */
+    .header-bg { background-color: #004d40; color: white; } /* MBP Teal */
+    .subheader-bg { background-color: #e0f2f1; color: #004d40; font-weight: 600; } /* Light Teal */
+    .forecast-cell { background-color: #fffde7; cursor: pointer; } /* Light yellow for editable cells */
+    .actual-cell { background-color: #f8f8f8; color: #555; } /* Grey for read-only actuals */
+    .account-group-row { background-color: #f5f5f5; font-weight: 700; border-top: 2px solid #ccc; }
+    .edit-input { 
+        width: 100%; 
+        border: 1px solid #1565c0; 
+        padding: 4px; 
+        box-shadow: 0 0 5px rgba(21, 101, 192, 0.5); 
+        font-size: 0.875rem; 
+        text-align: right;
+    }
+    .is-negative { color: #dc2626; } /* Red for negative numbers */
+    .table-fixed-header {
+        max-height: 80vh; /* Adjust as needed */
+        overflow-y: auto;
+    }
+    .table-fixed-header thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Content Header and Controls -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">FY{{ fiscal_year }} Data Status</h3>
+                </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <p class="mb-0">
+                        This report shows **Actuals** up to the current month ({{ today_month|date:"M" }}-{{ today_year }}) 
+                        and **Editable Forecasts** for the remaining months of the fiscal year.
+                    </p>
+                    {% if is_privileged %}
+                    <div>
+                        <a href="{% url 'budgeting:process_data' %}" class="btn btn-primary btn-sm mr-2">
+                            <i class="fas fa-redo-alt"></i> Run Data Aggregation
+                        </a>
+                        <a href="{% url 'budgeting:upload_gl' %}" class="btn btn-default btn-sm">
+                            <i class="fas fa-upload"></i> Upload New GL Data
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Report Container -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0 table-fixed-header">
+    
+                    <table class="table table-sm table-bordered table-striped text-sm">
+                        <thead>
+                            <tr class="header-bg">
+                                <th scope="col" class="px-3 py-2 text-left font-medium tracking-wider" style="min-width: 250px;">Account Name / Fund</th>
+                                {% for month, year in fiscal_months %}
+                                <th scope="col" class="px-3 py-2 text-right font-medium tracking-wider whitespace-nowrap">
+                                    {{ month|date:"M" }} {{ year }}
+                                    <div class="text-xs font-normal opacity-75">
+                                        {% if month < FISCAL_START_MONTH %}
+                                            {% if year == today_year %}
+                                                {% if month <= today_month %}ACTUAL{% else %}FORECAST{% endif %}
+                                            {% else %}
+                                                ACTUAL
+                                            {% endif %}
+                                        {% else %}
+                                            {% if year < today_year or (year == today_year and month <= today_month) %}ACTUAL{% else %}FORECAST{% endif %}
+                                        {% endif %}
+                                    </div>
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in report_data %}
+                                <!-- Account Group Header -->
+                                <tr class="account-group-row">
+                                    <td class="px-3 py-2 whitespace-nowrap text-left font-bold" colspan="{{ fiscal_months|length|add:1 }}">
+                                        {{ group.account.account_name }} ({{ group.account.account_code }})
+                                    </td>
+                                </tr>
+                                
+                                {% for row in group.rows %}
+                                    <tr>
+                                        <!-- Fund Name -->
+                                        <td class="px-3 py-2 text-left text-gray-800 font-weight-normal">
+                                            <span class="ml-4">{{ row.fund.fund_name }}</span>
+                                        </td>
+                                        
+                                        <!-- Monthly Data Cells -->
+                                        {% for month, year in fiscal_months %}
+                                            {% with month_year_key=(month, year) %}
+                                                {% with record=row.monthly_data|get_item:month_year_key %}
+                                                    {% if record %}
+                                                        {% if record.is_editable and is_privileged %}
+                                                            <!-- Editable Forecast Cell -->
+                                                            <td class="px-3 py-2 text-right whitespace-nowrap forecast-cell" 
+                                                                data-record-id="{{ record.id }}"
+                                                                data-value="{{ record.value|floatformat:2 }}"
+                                                                onclick="editForecast(this)">
+                                                            
+                                                                <span class="value-display {% if record.value < 0 %}is-negative{% endif %}">
+                                                                    {{ record.value|floatformat:2|default:"0.00"|intcomma }}
+                                                                </span>
+                                                            </td>
+                                                        {% else %}
+                                                            <!-- Actual or Non-Editable Forecast Cell -->
+                                                            <td class="px-3 py-2 text-right whitespace-nowrap actual-cell">
+                                                                <span class="{% if record.value < 0 %}is-negative{% endif %}">
+                                                                    {{ record.value|floatformat:2|default:"0.00"|intcomma }}
+                                                                </span>
+                                                            </td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <!-- Empty Cell -->
+                                                        <td class="px-3 py-2 text-right text-gray-400 actual-cell">0.00</td>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock content %}
+
+{% block extra_js %}
+<!-- Add Django's intcomma filter if using locale settings for number formatting -->
+{% load humanize %} 
+
+<script>
+    function editForecast(cell) {
+        if (cell.querySelector('input')) return; // Already editing
+        
+        const recordId = cell.getAttribute('data-record-id');
+        const currentValue = cell.getAttribute('data-value');
+        const displaySpan = cell.querySelector('.value-display');
+        
+        // Create input field
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.step = '0.01';
+        input.value = currentValue;
+        input.className = 'edit-input';
+        
+        // Replace display with input
+        cell.innerHTML = '';
+        cell.appendChild(input);
+        input.focus();
+        
+        // Save function
+        const saveChanges = async () => {
+            const newValue = input.value;
+            // Use parseFloat to compare numeric values, ignoring formatting difference
+            if (parseFloat(newValue) === parseFloat(currentValue)) {
+                // No change, just revert
+                revertToDisplay(cell, displaySpan, currentValue);
+                return;
+            }
+
+            cell.innerHTML = 'Saving...';
+            
+            try {
+                // Get CSRF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                const response = await fetch('{% url "budgeting:update_forecast_value" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        id: recordId,
+                        value: newValue
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // Success, update the display and data attribute
+                    const newFormattedValue = parseFloat(data.new_value).toFixed(2);
+                    revertToDisplay(cell, displaySpan, newFormattedValue);
+                    cell.setAttribute('data-value', newFormattedValue);
+                    
+                    // Update the negative style based on new value
+                    if (parseFloat(data.new_value) < 0) {
+                        displaySpan.classList.add('is-negative');
+                    } else {
+                        displaySpan.classList.remove('is-negative');
+                    }
+
+                    // Re-apply intcomma/humanize if possible (done below in revertToDisplay)
+                } else {
+                    alert(`Error: ${data.message}`);
+                    revertToDisplay(cell, displaySpan, currentValue); // Revert on failure
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('A network error occurred while saving.');
+                revertToDisplay(cell, displaySpan, currentValue); // Revert on network failure
+            }
+        };
+
+        // Event listeners
+        input.addEventListener('blur', saveChanges);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveChanges();
+            }
+        });
+    }
+    
+    // Final chunk of JS is below in Chunk 4
+
+    function revertToDisplay(cell, originalSpan, value) {
+        // Simple way to format number back to standard display
+        // Note: This does NOT re-apply Django's `intcomma` filter client-side.
+        // A full implementation would require a JavaScript library for localization/formatting.
+        // For now, we display the raw number.
+        originalSpan.textContent = parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        cell.innerHTML = '';
+        cell.appendChild(originalSpan);
+    }
+</script>
+{% endblock extra_js %}

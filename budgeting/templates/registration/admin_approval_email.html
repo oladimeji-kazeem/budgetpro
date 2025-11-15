@@ -1,0 +1,31 @@
+<p>Dear Finance Administrator,</p>
+
+<p>A new user has requested access to the MBP Budgeting and Performance App. Please review the details below and approve or reject the request.</p>
+
+<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; width: 30%;">Username:</td><td style="border: 1px solid #ddd; padding: 8px;">{{ user.username }}</td></tr>
+    <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Full Name:</td><td style="border: 1px solid #ddd; padding: 8px;">{{ user.get_full_name }}</td></tr>
+    <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Email:</td><td style="border: 1px solid #ddd; padding: 8px;">{{ user.email }}</td></tr>
+    <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Department:</td><td style="border: 1px solid #ddd; padding: 8px;">{{ user.department.department_name|default:"N/A" }}</td></tr>
+    <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Grade:</td><td style="border: 1px solid #ddd; padding: 8px;">{{ user.grade.grade_name|default:"N/A" }}</td></tr>
+</table>
+
+<p style="margin-top: 30px;">
+    <strong>Action Required:</strong> Click one of the links below to process the request:
+</p>
+
+<p style="margin-top: 10px;">
+    <a href="{{ approval_link }}" 
+       style="background-color: #004d40; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+       Approve User
+    </a>
+    
+    <span style="margin: 0 15px;">&nbsp;</span>
+    
+    <a href="{{ rejection_link }}" 
+       style="background-color: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+       Reject User
+    </a>
+</p>
+
+<p style="font-size: 0.9em; margin-top: 30px;">Note: By clicking 'Approve', the user's account will be activated and they will be notified.</p>

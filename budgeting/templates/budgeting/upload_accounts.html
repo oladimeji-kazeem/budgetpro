@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Chart of Accounts{% endblock %}
+
+{% block content_header %}
+    <h1>Upload Chart of Accounts</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:account_list' %}">Accounts</a></li>
+        <li class="breadcrumb-item active">Upload</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Upload Accounts CSV File</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.csv_file.id_for_label }}">{{ form.csv_file.label }}</label>
+                        <div class="custom-file">
+                            <input type="file" name="csv_file" class="custom-file-input" id="{{ form.csv_file.id_for_label }}" required>
+                            <label class="custom-file-label" for="{{ form.csv_file.id_for_label }}">Choose file</label>
+                        </div>
+                        {% if form.csv_file.help_text %}
+                            <small class="form-text text-muted">{{ form.csv_file.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-upload mr-2"></i>Upload and Process</button>
+                    <a href="{% url 'budgeting:download_account_template' %}" class="btn btn-secondary">
+                        <i class="fas fa-download mr-2"></i>Download Template
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function () {
+  bsCustomFileInput.init();
+});
+</script>
+{% endblock %}

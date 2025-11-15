@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block content_header %}
+    <h1>{{ form_title }}</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:datedimension_list' %}">Dates</a></li>
+        <li class="breadcrumb-item active">{{ form_title }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Date Details</h3>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 form-group">{{ form.full_date.label_tag }} {{ form.full_date }}</div>
+                <div class="col-md-2 form-group">{{ form.year.label_tag }} {{ form.year }}</div>
+                <div class="col-md-2 form-group">{{ form.month.label_tag }} {{ form.month }}</div>
+                <div class="col-md-2 form-group">{{ form.day.label_tag }} {{ form.day }}</div>
+                <div class="col-md-2 form-group">{{ form.week_of_year.label_tag }} {{ form.week_of_year }}</div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6 form-group">{{ form.month_name.label_tag }} {{ form.month_name }}</div>
+                <div class="col-md-6 form-group">{{ form.short_month_name.label_tag }} {{ form.short_month_name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">{{ form.quarter.label_tag }} {{ form.quarter }}</div>
+                <div class="col-md-6 form-group">{{ form.quarter_name.label_tag }} {{ form.quarter_name }}</div>
+            </div>
+             <div class="row">
+                <div class="col-md-6 form-group">{{ form.year_month.label_tag }} {{ form.year_month }}</div>
+                <div class="col-md-6 form-group">{{ form.year_quarter.label_tag }} {{ form.year_quarter }}</div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'budgeting:datedimension_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

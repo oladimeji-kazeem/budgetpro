@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Departments{% endblock %}
+
+{% block content_header %}
+    <h1>Manage Departments</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item active">Departments</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Department List</h3>
+        <div class="card-tools">
+            <a href="{% url 'budgeting:department_create' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add New Department
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Department Name</th>
+                    <th style="width: 150px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ department.department_name }}</td>
+                    <td>
+                        <a href="{% url 'budgeting:department_update' department.pk %}" class="btn btn-xs btn-info"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'budgeting:department_delete' department.pk %}" class="btn btn-xs btn-danger"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">No departments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

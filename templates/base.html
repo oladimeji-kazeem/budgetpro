@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BudgetPro | {% block title %}{% endblock %}</title>
+
+  <!-- Google Font: Inter -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,600,700&display=swap">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- Theme style (AdminLTE) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  
+  <!-- Custom MBP Theme Colors (Overrides) -->
+  <style>
+    /* Sidebar Background & Active Color - Using MBP Teal (#004d40) */
+    .main-sidebar, .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
+        background-color: #004d40 !important;
+        color: #fff;
+    }
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
+        background-color: #1565c0 !important; /* Accent Blue for active state */
+        color: #fff;
+    }
+    .main-header {
+        border-bottom: 3px solid #1565c0; /* Accent Blue */
+    }
+    .brand-link {
+        border-bottom: 1px solid #00332a !important; 
+    }
+    .info-box-icon {
+        background-color: #1565c0 !important; /* Accent Blue for info boxes */
+    }
+    .btn-primary {
+        background-color: #1565c0 !important;
+        border-color: #1565c0 !important;
+    }
+    .btn-primary:hover {
+        background-color: #0d47a1 !important;
+        border-color: #0d47a1 !important;
+    }
+  </style>
+  
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'budgeting:profile' %}" title="User Profile">
+            <i class="far fa-user"></i> {{ user.username }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo - Centered and Stacked -->
+    <a href="{% url 'budgeting:home' %}" class="brand-link text-center">
+      {% load static %}
+      <img src="{% static 'img/logo.png' %}" alt="MBP Logo" class="img-circle elevation-3" style="opacity: .8; width: 60px; height: 60px;">
+      <span class="brand-text font-weight-bold d-block mt-2">BudgetPro</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      
+      <!-- User Panel -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="info text-white">
+          <a href="{% url 'budgeting:profile' %}" class="d-block text-white">{{ user.get_full_name|default:user.username }}</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          
+          <li class="nav-item">
+            <a href="{% url 'budgeting:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          
+          {% with request.resolver_match.url_name as url_name %}
+          <li class="nav-header">BUDGETING CYCLE</li>
+
+          <li class="nav-item {% if url_name in 'historical_data,aum_details,hod_submission,final_forecast' %}menu-open{% endif %}">
+            <a href="#" class="nav-link {% if url_name in 'historical_data,aum_details,hod_submission,final_forecast' %}active{% endif %}">
+              <i class="nav-icon fas fa-project-diagram"></i>
+              <p>
+                Budget &amp; Forecast
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'budgeting:historical_data' %}" class="nav-link {% if url_name == 'historical_data' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>Module 1: Historical Data</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'budgeting:aum_details' %}" class="nav-link {% if url_name == 'aum_details' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>Module 2: AUM Details</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'budgeting:hod_submission' %}" class="nav-link {% if url_name == 'hod_submission' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>Module 3: HOD Submissions</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'budgeting:final_forecast' %}" class="nav-link {% if url_name == 'final_forecast' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>Module 4: Multi-Year Budget</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-header">ANALYSIS & REPORTING</li>
+          <li class="nav-item">
+            <a href="{% url 'budgeting:performance_management' %}" class="nav-link {% if url_name == 'performance_management' %}active{% endif %}">
+              <i class="nav-icon fas fa-trophy"></i>
+              <p>Module 5: Performance</p>
+            </a>
+          </li>
+          
+          {% if user.is_staff %}
+          <li class="nav-item {% if url_name in 'upload_gl,gltransaction_list,department_list,fund_list,fundcategory_list,sector_list,grade_list,scenario_list,account_list,region_list,state_list,location_list,datedimension_list' %}menu-open{% endif %}">
+            <a href="#" class="nav-link {% if url_name in 'upload_gl,gltransaction_list,department_list,fund_list,fundcategory_list,sector_list,grade_list,scenario_list,account_list,region_list,state_list,location_list,datedimension_list' %}active{% endif %}">
+              <i class="nav-icon fas fa-cogs"></i>
+              <p>Administration<i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'budgeting:upload_gl' %}" class="nav-link {% if url_name == 'upload_gl' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>GL Data Upload</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'budgeting:gltransaction_list' %}" class="nav-link {% if url_name == 'gltransaction_list' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i><p>View GL Transactions</p>
+                </a>
+              </li>
+              <li class="nav-item {% if url_name in 'department_list,fund_list,sector_list,grade_list,scenario_list' %}menu-open{% endif %}">
+                <a href="#" class="nav-link {% if url_name in 'department_list,fund_list,sector_list,grade_list,scenario_list' %}active{% endif %}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Setup Tables<i class="right fas fa-angle-left"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:account_list' %}" class="nav-link {% if 'account' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Chart of Accounts</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:department_list' %}" class="nav-link {% if 'department' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Departments</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:fund_list' %}" class="nav-link {% if 'fund' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Funds</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:fundcategory_list' %}" class="nav-link {% if 'fundcategory' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Fund Categories</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:sector_list' %}" class="nav-link {% if 'sector' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Sectors</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:grade_list' %}" class="nav-link {% if 'grade' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Grades</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:scenario_list' %}" class="nav-link {% if 'scenario' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-sm"></i><p>Scenarios</p></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-globe-africa nav-icon text-sm"></i>
+                            <p>Geographic Setup<i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{% url 'budgeting:region_list' %}" class="nav-link {% if 'region' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-xs"></i><p>Regions</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'budgeting:state_list' %}" class="nav-link {% if 'state' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-xs"></i><p>States</p></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'budgeting:location_list' %}" class="nav-link {% if 'location' in url_name %}active{% endif %}"><i class="fas fa-minus nav-icon text-xs"></i><p>Locations</p></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'budgeting:datedimension_list' %}" class="nav-link {% if 'datedimension' in url_name %}active{% endif %}"><i class="far fa-circle nav-icon"></i><p>Date Dimension</p></a>
+                    </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="/admin/" class="nav-link" target="_blank">
+                  <i class="far fa-circle nav-icon"></i><p>Advanced Settings</p>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+          {% endif %}
+          {% endwith %}
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">{% block content_header %}{% endblock %}</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        {% if messages %}
+            <div class="mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        {% block content %}{% endblock %}
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      MBP Budgeting & Performance Management
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2024 MBP.</strong> All rights reserved.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

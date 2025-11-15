@@ -1,0 +1,59 @@
+/* Professional and Financial Theme: MBP Teal (#004d40) and Accent Blue (#1565c0)
+*/
+
+/* 1. Header and Branding */
+#header {
+    background: #004d40; /* MBP Teal */
+    color: #ffffff;
+    height: 48px;
+}
+#header a:link, #header a:visited {
+    color: #ffffff;
+}
+div.breadcrumbs {
+    background: #e0f2f1; /* Light Teal background */
+    color: #004d40;
+    border-bottom: 1px solid #004d40;
+}
+div.breadcrumbs a {
+    color: #1565c0; /* Accent Blue for links */
+}
+
+/* 2. Primary Buttons and Links */
+.module h2, .module caption, .inline-group h2 {
+    background: #f0f4f7; /* Light gray for module headers */
+    color: #333;
+    border-bottom: 1px solid #cfd8dc;
+}
+
+/* 3. Button Styling */
+.button, input[type="submit"], input[type="button"], .submit-row input, a.button {
+    background: #1565c0; /* Accent Blue */
+    color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #0d47a1;
+    transition: background 0.2s;
+    font-weight: 600;
+}
+.button:active, input[type="submit"]:active, input[type="button"]:active, .submit-row input:active, a.button:active {
+    background: #0d47a1;
+}
+.button.default, input[type="submit"].default, .submit-row .default {
+    background: #004d40; /* Primary Teal for default action */
+    border: 1px solid #00332a;
+}
+.button.default:active, input[type="submit"].default:active, .submit-row .default:active {
+    background: #00332a;
+}
+
+/* 4. Messages */
+ul.messagelist li.success {
+    background: #e8f5e9; /* Light Green */
+    border-color: #4caf50;
+    color: #1b5e20;
+}
+ul.messagelist li.error {
+    background: #ffebee; /* Light Red */
+    border-color: #f44336;
+    color: #b71c1c;
+}

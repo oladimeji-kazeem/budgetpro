@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MBP</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 960px; margin: 20px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { color: #004d40; border-bottom: 3px solid #004d40; padding-bottom: 10px; margin-bottom: 25px; }
+        .welcome-message { font-size: 1.2em; margin-bottom: 30px; }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .nav-card {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .nav-card h2 { color: #2e7d32; font-size: 1.3em; margin-top: 0; }
+        .nav-card p { color: #555; }
+        .nav-card a { text-decoration: none; color: inherit; display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the MBP Dashboard, {{ first_name }}!</h1>
+        <p class="welcome-message">Select an option below to get started.</p>
+
+        <div class="nav-grid">
+            <a href="{% url 'budgeting:profile' %}" class="nav-card"><h2>My Profile</h2><p>View and update your personal information.</p></a>
+            {% if is_privileged %}<a href="{% url 'budgeting:upload_gl' %}" class="nav-card"><h2>Upload GL Data</h2><p>Import actual financial transactions from a CSV file.</p></a>{% endif %}
+            <a href="{% url 'admin:index' %}" class="nav-card"><h2>Admin Panel</h2><p>Manage master data, users, and application settings.</p></a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Upload GL Data{% endblock %}
+
+{% block content_header %}
+    <h1>GL/Ledger Data Upload</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item active">GL Data Upload</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Upload GL/Ledger CSV File</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.csv_file.id_for_label }}">{{ form.csv_file.label }}</label>
+                        <div class="custom-file">
+                            <input type="file" name="csv_file" class="custom-file-input" id="{{ form.csv_file.id_for_label }}" required>
+                            <label class="custom-file-label" for="{{ form.csv_file.id_for_label }}">Choose file</label>
+                        </div>
+                        {% if form.csv_file.help_text %}
+                            <small class="form-text text-muted">{{ form.csv_file.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-upload mr-2"></i>Upload and Process</button>
+                    <a href="{% url 'budgeting:download_gl_template' %}" class="btn btn-secondary">
+                        <i class="fas fa-download mr-2"></i>Download Template
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-info card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-info-circle mr-2"></i>CSV Format Requirements</h3>
+            </div>
+            <div class="card-body">
+                <p>The CSV file <strong>MUST</strong> contain the following columns:</p>
+                <ul>
+                    <li><code>Date</code>: YYYY-MM-DD</li>
+                    <li><code>Account Code</code></li>
+                    <li><code>Fund Name</code></li>
+                    <li><code>Department</code></li>
+                    <li><code>State</code></li>
+                    <li><code>Sector</code></li>
+                    <li><code>Amount</code></li>
+                    <li><code>Description</code> (Optional)</li>
+                </ul>
+                <hr>
+                <p class="text-muted"><strong>Action Required:</strong> Ensure all relevant master data (Accounts, Funds, etc.) and the 'ACTUAL' Scenario are set up in System Settings before uploading.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Script to show the filename in the custom file input
+$(document).ready(function () {
+  $('.custom-file-input').on('change', function () {
+    let fileName = $(this).val().split('\\').pop();
+    $(this).next('.custom-file-label').addClass("selected").html(fileName);
+  });
+});
+</script>
+{% endblock %}

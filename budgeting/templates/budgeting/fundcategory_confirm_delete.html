@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content_header %}
+    <h1>Confirm Deletion</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:home' %}"><i class="fas fa-tachometer-alt"></i> Home</a></li>
+        <li class="breadcrumb-item">Administration</li>
+        <li class="breadcrumb-item"><a href="{% url 'budgeting:fundcategory_list' %}">Fund Categories</a></li>
+        <li class="breadcrumb-item active">Delete</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Delete Fund Category</h3>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete the category: <strong>{{ object.category_name }}</strong>?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'budgeting:fundcategory_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

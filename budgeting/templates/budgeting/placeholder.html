@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Module Placeholder{% endblock %}
+
+{% block content_header %}
+    {{ module_name }} - Under Development
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+        <div class="col-lg-12">
+            <div class="card card-outline card-warning">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-tools mr-2"></i> {{ module_name }} Status</h3>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-5">
+                        <h1 class="display-4 text-warning">Coming Soon!</h1>
+                        <p class="lead">
+                            This feature (**{{ module_name }}**) is currently under active development.
+                        </p>
+                        <p class="text-muted">
+                            **Target Functionality:** {{ module_description }}
+                        </p>
+                        <p class="mt-4">
+                            Please continue work on **Module 1: Historical Data** or proceed to **System Settings (Admin)** to ensure all master data is properly configured.
+                        </p>
+                        <a href="{% url 'budgeting:dashboard' %}" class="btn btn-primary mt-3"><i class="fas fa-arrow-left"></i> Return to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
